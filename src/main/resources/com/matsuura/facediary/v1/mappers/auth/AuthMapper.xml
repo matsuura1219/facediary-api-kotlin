@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.matsuura.facediary.v1.mappers.auth.AuthMapper">
+    <select id="findByEmail" resultType="com.matsuura.facediary.v1.models.UserModel">
+        SELECT
+            email, password
+        FROM
+            facediary_db.user
+        WHERE
+            email = #{email}
+    </select>
+</mapper>
