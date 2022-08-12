@@ -9,4 +9,9 @@ object ErrorCode {
     const val ES01_001: String = "ES01_001"
     // ユーザが存在しない場合
     const val ES01_002: String = "ES01_002"
+    // メールアドレス未検証の場合
+    const val ES01_003: String = "ES01_003"
+
+    // ユーザが存在している場合
+    const val ES02_001: String = "ES02_001"
 }

@@ -29,6 +29,8 @@ dependencies {
 	implementation("com.auth0:java-jwt:3.10.2")
 	// mybatis
 	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0")
+	// mail
+	implementation("org.springframework.boot:spring-boot-starter-mail")
 }
 
 tasks.withType<KotlinCompile> {
