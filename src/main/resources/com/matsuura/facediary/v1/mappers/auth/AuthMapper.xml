@@ -6,18 +6,37 @@
 
     <select id="findByEmail" resultType="com.matsuura.facediary.v1.models.UserModel">
         SELECT
-            email, password, isVerified
+            email, password, is_verified AS isVerified
         FROM
             facediary_db.user
         WHERE
             email = #{email}
     </select>
 
+    <select id="findByToken" resultType="com.matsuura.facediary.v1.models.UserModel">
+        SELECT
+            email, password, is_verified AS isVerified
+        FROM
+            facediary_db.user
+        WHERE
+            verify_token = #{token}
+    </select>
+
     <insert id="insertUser" parameterType="java.util.Map">
         INSERT INTO
-            facediary_db.user(email, password, change_password_token)
+            facediary_db.user(email, password, verify_token)
         VALUES
             (#{email}, #{password}, #{token})
     </insert>
+
+    <update id="update" parameterType="java.util.Map">
+        UPDATE
+            facediary_db.user
+        SET
+            is_verified = true
+        WHERE
+            email = #{email} and
+            verify_token = #{token}
+    </update>
 
 </mapper>

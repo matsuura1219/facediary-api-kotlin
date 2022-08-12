@@ -74,4 +74,26 @@ class AuthServiceImpl: AuthService {
 
     }
 
+    override fun verify(token: String): Map<String, Any> {
+
+        // search user
+        val user: UserModel? = authMapper.findByToken(token = token)
+
+        if (user == null) {
+            val status: String = Constants.FAILURE
+            val errorCode: String = ErrorCode.ES04_001
+            return mapOf(
+                "status" to status,
+                "errorCode" to errorCode,
+            )
+        }
+
+        authMapper.update(email = user.email, token = token)
+
+        return mapOf(
+            "status" to Constants.SUCCESS,
+            "errorCode" to "",
+        )
+    }
+
 }

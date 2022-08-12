@@ -8,6 +8,10 @@ interface AuthMapper {
 
     fun findByEmail(email: String): UserModel?
 
+    fun findByToken(token: String): UserModel?
+
     fun insertUser(email: String, password: String, token: String)
+
+    fun update(email: String, token: String): Int
 
 }

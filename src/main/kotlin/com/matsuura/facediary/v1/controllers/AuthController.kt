@@ -7,6 +7,7 @@ import com.matsuura.facediary.utils.ErrorCode
 import com.matsuura.facediary.utils.JwtTokenUtils
 import com.matsuura.facediary.utils.Utils
 import com.matsuura.facediary.v1.models.request.CreateUserRequest
+import com.matsuura.facediary.v1.models.request.VerifyRequest
 import com.matsuura.facediary.v1.services.SendEmailService
 import com.matsuura.facediary.v1.services.auth.AuthService
 import org.springframework.beans.factory.annotation.Autowired
@@ -117,4 +118,43 @@ class AuthController {
         )
 
     }
+
+    @PostMapping("/verify")
+    fun verify (@RequestBody user: VerifyRequest): Map<String, Any> {
+
+        val email: String = user.email
+        val token: String = user.token
+
+        // validation check
+        if (!email.isEmailValidate()) {
+            val status: String = Constants.FAILURE
+            val errorCode: String = ErrorCode.ES00_001
+            return mapOf(
+                "status" to status,
+                "errorCode" to errorCode
+            )
+        }
+
+        val response = authService.verify(token = token)
+
+        if (response["status"] as String == Constants.FAILURE) {
+            val status: String = Constants.FAILURE
+            val errorCode: String = response["errorCode"] as String
+            return mapOf(
+                "status" to status,
+                "errorCode" to errorCode
+            )
+        }
+
+        // create access token
+        val accessToken = JwtTokenUtils.createJwtToken(email = email)
+
+        return mapOf(
+            "status" to Constants.SUCCESS,
+            "errorCode" to "",
+            "accessToken" to accessToken,
+        )
+
+    }
+
 }

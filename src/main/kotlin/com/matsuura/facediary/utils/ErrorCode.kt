@@ -14,4 +14,7 @@ object ErrorCode {
 
     // ユーザが存在している場合
     const val ES02_001: String = "ES02_001"
+
+    // トークンが存在しない場合
+    const val ES04_001: String = "ES04_001"
 }

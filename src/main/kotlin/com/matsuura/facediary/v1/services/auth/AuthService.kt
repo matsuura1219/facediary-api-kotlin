@@ -6,4 +6,6 @@ interface AuthService {
 
     fun createUser(email: String, password: String, token: String): Map<String, Any>
 
+    fun verify(token: String): Map<String, Any>
+
 }
