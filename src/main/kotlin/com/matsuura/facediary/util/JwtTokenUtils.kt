@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTVerificationException
-import com.auth0.jwt.interfaces.DecodedJWT
 import com.matsuura.facediary.exception.Http401Exception
 import java.util.*
 
@@ -47,8 +46,7 @@ object JwtTokenUtils {
             verifier.verify(token)
         } catch (e: JWTVerificationException) {
             throw Http401Exception(
-                message = "Token Expired",
-                errorCode = "ES00_000",
+                message = ErrorMessage.TOKEN_EXPIRED,
             )
         }
 

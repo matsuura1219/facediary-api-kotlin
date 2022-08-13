@@ -7,12 +7,4 @@ package com.matsuura.facediary.exception
 
 class Http500Exception constructor(
     message: String,
-    errorCode: String,
-) : RuntimeException(message) {
-
-    val errorCode: String
-
-    init {
-        this.errorCode = errorCode
-    }
-}
+) : RuntimeException(message)

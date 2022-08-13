@@ -4,6 +4,7 @@ import com.matsuura.facediary.exception.Http400Exception
 import com.matsuura.facediary.extension.isEmailValidate
 import com.matsuura.facediary.extension.isPasswordValidate
 import com.matsuura.facediary.util.Constants
+import com.matsuura.facediary.util.ErrorMessage
 import com.matsuura.facediary.util.JwtTokenUtils
 import com.matsuura.facediary.util.Utils
 import com.matsuura.facediary.v1.models.User
@@ -33,8 +34,7 @@ class AuthController {
         // validation check
         if (!email.isEmailValidate() || !password.isPasswordValidate()) {
             throw Http400Exception(
-                message = "Validation Error",
-                errorCode = "ES00_000",
+                message = ErrorMessage.VALIDATION_ERROR,
             )
         }
 
