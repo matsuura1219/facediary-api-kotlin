@@ -4,39 +4,48 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.matsuura.facediary.v1.mappers.auth.AuthMapper">
 
-    <select id="findByEmail" resultType="com.matsuura.facediary.v1.models.UserModel">
+    <select id="findUserByEmail" resultType="com.matsuura.facediary.v1.models.User">
         SELECT
-            email, password, is_verified AS isVerified
+            email, password, is_verified AS isVerified, verify_token, reset_password_token
         FROM
             facediary_db.user
         WHERE
             email = #{email}
     </select>
 
-    <select id="findByToken" resultType="com.matsuura.facediary.v1.models.UserModel">
+    <select id="findUserByVerifyToken" resultType="com.matsuura.facediary.v1.models.User">
         SELECT
-            email, password, is_verified AS isVerified
+            email, password, is_verified AS isVerified, verify_token, reset_password_token
         FROM
             facediary_db.user
         WHERE
-            verify_token = #{token}
+            verify_token = #{verifyToken}
     </select>
 
-    <insert id="insertUser" parameterType="java.util.Map">
+    <insert id="insertUser" parameterType="com.matsuura.facediary.v1.dto.InsertUserDto">
         INSERT INTO
-            facediary_db.user(email, password, verify_token)
-        VALUES
-            (#{email}, #{password}, #{token})
+            facediary_db.user (email, password, verify_token)
+        VALUE
+            (#{email, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{verifyToken, jdbcType=VARCHAR})
     </insert>
 
-    <update id="update" parameterType="java.util.Map">
+    <update id="updateVerifyFlag">
         UPDATE
             facediary_db.user
         SET
-            is_verified = true
+            is_verified = true,
+            verify_token = null
         WHERE
-            email = #{email} and
-            verify_token = #{token}
+            verify_token = #{verifyToken}
+    </update>
+
+    <update id="updateResetPasswordToken">
+        UPDATE
+            facediary_db.user
+        SET
+            reset_password_token = #{passwordToken}
+        WHERE
+            email = #{email}
     </update>
 
 </mapper>

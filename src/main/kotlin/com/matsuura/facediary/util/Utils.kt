@@ -1,11 +1,13 @@
-package com.matsuura.facediary.utils
+package com.matsuura.facediary.util
 
 import java.security.MessageDigest
+import java.time.LocalDateTime
 
 object Utils {
 
-    fun createUniqueToken(email: String, password: String): String {
-        val uniqueStr: String = email + password
+    fun generateVerifyToken(email: String, password: String = ""): String {
+        val currentDateStr: String = LocalDateTime.now().toString()
+        val uniqueStr: String = email + password + currentDateStr
         val strHash = MessageDigest.getInstance("SHA-256")
             .digest(uniqueStr.toByteArray())
             .joinToString(separator = "") {

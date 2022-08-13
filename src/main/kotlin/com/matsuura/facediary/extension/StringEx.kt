@@ -1,6 +1,6 @@
-package com.matsuura.facediary.extensions
+package com.matsuura.facediary.extension
 
-import com.matsuura.facediary.utils.Constants
+import com.matsuura.facediary.util.Constants
 
 fun String.isEmailValidate(): Boolean {
     val isEmpty: Boolean = this.isEmpty()

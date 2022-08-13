@@ -1,6 +1,6 @@
-package com.matsuura.facediary.v1.services
+package com.matsuura.facediary.v1.services.email
 
-interface SendEmailService {
+interface EmailService {
 
     fun sendEmail(
         from: String,

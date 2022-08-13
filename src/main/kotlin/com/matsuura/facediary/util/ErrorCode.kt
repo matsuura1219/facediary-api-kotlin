@@ -1,4 +1,4 @@
-package com.matsuura.facediary.utils
+package com.matsuura.facediary.util
 
 object ErrorCode {
 

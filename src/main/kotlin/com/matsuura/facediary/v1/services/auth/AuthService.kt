@@ -1,11 +1,15 @@
 package com.matsuura.facediary.v1.services.auth
 
+import com.matsuura.facediary.v1.models.User
+
 interface AuthService {
 
-    fun login(email: String, password: String): Map<String, Any>
+    fun login(email: String, password: String)
 
-    fun createUser(email: String, password: String, token: String): Map<String, Any>
+    fun createUser(email: String, password: String, verifyToken: String)
 
-    fun verify(token: String): Map<String, Any>
+    fun verifyToken(verifyToken: String): User
+
+    fun resetPassword(email: String, passwordToken: String)
 
 }

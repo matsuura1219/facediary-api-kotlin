@@ -1,17 +1,21 @@
 package com.matsuura.facediary.v1.mappers.auth
 
-import com.matsuura.facediary.v1.models.UserModel
+import com.matsuura.facediary.v1.dto.InsertUserDto
+import com.matsuura.facediary.v1.dto.UpdateVerifyFlagDto
+import com.matsuura.facediary.v1.models.User
 import org.apache.ibatis.annotations.Mapper
 
 @Mapper
 interface AuthMapper {
 
-    fun findByEmail(email: String): UserModel?
+    fun findUserByEmail(email: String): User?
 
-    fun findByToken(token: String): UserModel?
+    fun findUserByVerifyToken(verifyToken: String): User?
 
-    fun insertUser(email: String, password: String, token: String)
+    fun insertUser(dto: InsertUserDto): Int
 
-    fun update(email: String, token: String): Int
+    fun updateVerifyFlag(verifyToken: String): Int
+
+    fun updateResetPasswordToken(email: String, passwordToken: String): Int
 
 }

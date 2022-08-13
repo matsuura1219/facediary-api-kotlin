@@ -1,15 +1,16 @@
 package com.matsuura.facediary.v1.controllers
 
-import com.matsuura.facediary.extensions.isEmailValidate
-import com.matsuura.facediary.extensions.isPasswordValidate
-import com.matsuura.facediary.utils.Constants
-import com.matsuura.facediary.utils.ErrorCode
-import com.matsuura.facediary.utils.JwtTokenUtils
-import com.matsuura.facediary.utils.Utils
-import com.matsuura.facediary.v1.models.request.CreateUserRequest
-import com.matsuura.facediary.v1.models.request.VerifyRequest
-import com.matsuura.facediary.v1.services.SendEmailService
+import com.matsuura.facediary.exception.Http400Exception
+import com.matsuura.facediary.extension.isEmailValidate
+import com.matsuura.facediary.extension.isPasswordValidate
+import com.matsuura.facediary.util.Constants
+import com.matsuura.facediary.util.JwtTokenUtils
+import com.matsuura.facediary.util.Utils
+import com.matsuura.facediary.v1.models.User
+import com.matsuura.facediary.v1.models.requests.CreateUserRequest
+import com.matsuura.facediary.v1.models.requests.VerifyTokenRequest
 import com.matsuura.facediary.v1.services.auth.AuthService
+import com.matsuura.facediary.v1.services.email.EmailService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -21,7 +22,7 @@ class AuthController {
     private lateinit var authService: AuthService
 
     @Autowired
-    private lateinit var sendEmailService: SendEmailService
+    private lateinit var emailService: EmailService
 
     @GetMapping("/login")
     fun login(
@@ -31,130 +32,109 @@ class AuthController {
 
         // validation check
         if (!email.isEmailValidate() || !password.isPasswordValidate()) {
-            val status: String = Constants.FAILURE
-            val errorCode: String = ErrorCode.ES00_001
-            return mapOf(
-                "status" to status,
-                "errorCode" to errorCode
+            throw Http400Exception(
+                message = "Validation Error",
+                errorCode = "ES00_000",
             )
         }
 
         // login
-        val response: Map<String, Any> = authService.login(
+        authService.login(
             email = email,
-            password = password
+            password = password,
         )
 
-        if (response["status"] as String == Constants.FAILURE) {
-            val status: String = Constants.FAILURE
-            val errorCode: String = response["errorCode"] as String
-            return mapOf(
-                "status" to status,
-                "errorCode" to errorCode
-            )
-        }
-
-        // create access token
-        val accessToken = JwtTokenUtils.createJwtToken(email = email)
+        val accessToken: String = JwtTokenUtils.generateJwtToken(email = email)
 
         return mapOf(
-            "status" to Constants.SUCCESS,
+            "message" to "Successful",
             "errorCode" to "",
             "accessToken" to accessToken,
         )
 
     }
 
-    @PostMapping("/createUser")
+    @PostMapping("/create_user")
     fun createUser(
-        @RequestBody user: CreateUserRequest
-    ): Map<String, Any> {
+        @RequestBody request: CreateUserRequest
+    ) : Map<String, Any> {
 
-        val email: String = user.email
-        val password: String = user.password
-
-        // validation check
-        if (!email.isEmailValidate() || !password.isPasswordValidate()) {
-            val status: String = Constants.FAILURE
-            val errorCode: String = ErrorCode.ES00_001
-            return mapOf(
-                "status" to status,
-                "errorCode" to errorCode
-            )
-        }
-
-        val token: String = Utils.createUniqueToken(
+        val email: String = request.email
+        val password: String = request.password
+        val verifyToken: String = Utils.generateVerifyToken(
             email = email,
-            password = password
+            password = password,
         )
 
         // create user
-        val response: Map<String, Any> = authService.createUser(
+        authService.createUser(
             email = email,
             password = password,
-            token = token,
+            verifyToken = verifyToken,
         )
 
-        if (response["status"] as String == Constants.FAILURE) {
-            val status: String = Constants.FAILURE
-            val errorCode: String = response["errorCode"] as String
-            return mapOf(
-                "status" to status,
-                "errorCode" to errorCode
-            )
-        }
+        val url: String = String.format(Constants.REGISTER_MAIL_URL, verifyToken)
 
         // send email
-        sendEmailService.sendEmail(
+        emailService.sendEmail(
             from = Constants.MAIL_ACCOUNT,
             to = email,
             title = Constants.REGISTER_MAIL_TITLE,
-            message = Constants.REGISTER_MAIL_MESSAGE + "http://localhost:8080/facediary?token=${token}",
+            message = String.format(Constants.REGISTER_MAIL_MESSAGE, url),
         )
 
         return mapOf(
-            "status" to Constants.SUCCESS,
+            "message" to "Successful",
             "errorCode" to "",
         )
 
     }
 
-    @PostMapping("/verify")
-    fun verify (@RequestBody user: VerifyRequest): Map<String, Any> {
+    @PostMapping("/verify_token")
+    fun verifyToken(
+        @RequestBody request: VerifyTokenRequest
+    ) : Map<String, Any> {
 
-        val email: String = user.email
-        val token: String = user.token
+        val verifyToken: String = request.verifyToken
 
-        // validation check
-        if (!email.isEmailValidate()) {
-            val status: String = Constants.FAILURE
-            val errorCode: String = ErrorCode.ES00_001
-            return mapOf(
-                "status" to status,
-                "errorCode" to errorCode
-            )
-        }
+        // verify token
+        val user: User = authService.verifyToken(verifyToken = verifyToken)
 
-        val response = authService.verify(token = token)
-
-        if (response["status"] as String == Constants.FAILURE) {
-            val status: String = Constants.FAILURE
-            val errorCode: String = response["errorCode"] as String
-            return mapOf(
-                "status" to status,
-                "errorCode" to errorCode
-            )
-        }
-
-        // create access token
-        val accessToken = JwtTokenUtils.createJwtToken(email = email)
+        val accessToken: String = JwtTokenUtils.generateJwtToken(email = user.email)
 
         return mapOf(
-            "status" to Constants.SUCCESS,
+            "message" to "Successful",
             "errorCode" to "",
             "accessToken" to accessToken,
         )
+    }
 
+    @GetMapping("/reset_password")
+    fun resetPassword (
+        @RequestParam("email") email: String,
+    ): Map<String, Any> {
+
+        val passwordToken: String = Utils.generateVerifyToken(
+            email = email,
+        )
+
+        authService.resetPassword(
+            email = email,
+            passwordToken = passwordToken,
+        )
+
+        val url: String = String.format(Constants.RESET_PASSWORD_MAIL_URL, passwordToken)
+        emailService.sendEmail(
+            from = Constants.MAIL_ACCOUNT,
+            to = email,
+            title = Constants.RESET_PASSWORD_MAIL_TITLE,
+            message = String.format(Constants.RESET_PASSWORD_MAIL_MESSAGE, url),
+        )
+
+        return mapOf(
+            "message" to "Successful",
+            "errorCode" to "",
+        )
     }
 
 }
