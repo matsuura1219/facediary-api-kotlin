@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 object Utils {
 
-    fun generateVerifyToken(email: String, password: String = ""): String {
+    fun generateUniqueToken(email: String, password: String = ""): String {
         val currentDateStr: String = LocalDateTime.now().toString()
         val uniqueStr: String = email + password + currentDateStr
         val strHash = MessageDigest.getInstance("SHA-256")

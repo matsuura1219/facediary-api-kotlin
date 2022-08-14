@@ -39,11 +39,29 @@
             verify_token = #{verifyToken}
     </update>
 
+    <update id="updateVerifyToken">
+        UPDATE
+            facediary_db.user
+        SET
+            verify_token = #{verifyToken}
+        WHERE
+            email = #{email}
+    </update>
+
     <update id="updateResetPasswordToken">
         UPDATE
             facediary_db.user
         SET
             reset_password_token = #{passwordToken}
+        WHERE
+            email = #{email}
+    </update>
+
+    <update id="updatePassword">
+        UPDATE
+            facediary_db.user
+        SET
+            password = #{password}
         WHERE
             email = #{email}
     </update>

@@ -12,4 +12,6 @@ interface AuthService {
 
     fun resetPassword(email: String, passwordToken: String)
 
+    fun changePassword(email: String, oldPassword: String, newPassword: String, passwordToken: String)
+
 }

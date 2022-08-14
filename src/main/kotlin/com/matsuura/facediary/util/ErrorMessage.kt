@@ -2,6 +2,8 @@ package com.matsuura.facediary.util
 
 object ErrorMessage {
 
+    const val SUCCESS: String = "SUCCESS"
+
     const val VALIDATION_ERROR: String = "VALIDATION_ERROR"
 
     const val DUPLICATE_KEY: String = "DUPLICATE_KEY"
@@ -20,6 +22,8 @@ object ErrorMessage {
 
     const val VERIFY_TOKEN_ERROR: String = "VERIFY_TOKEN_ERROR"
 
+    const val RESET_PASSWORD_TOKEN_MISTAKE: String = "RESET_PASSWORD_TOKEN_MISTAKE"
+
     const val UNKNOWN_ERROR: String = "UNKNOWN_ERROR"
 
     val CODE_LIST: Map<String, String> = mapOf(
@@ -36,6 +40,7 @@ object ErrorMessage {
         MAIL_NOT_VERIFIED to "ES01_003",
         USER_ALREADY_EXISTED to "ES01_004",
         VERIFY_TOKEN_ERROR to "ES01_005",
+        RESET_PASSWORD_TOKEN_MISTAKE to "ES01_006",
 
         // other
         UNKNOWN_ERROR to "ES99_001",

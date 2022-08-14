@@ -6,6 +6,7 @@ import com.matsuura.facediary.exception.Http404Exception
 import com.matsuura.facediary.exception.Http500Exception
 import com.matsuura.facediary.util.ErrorMessage
 import com.matsuura.facediary.v1.dto.InsertUserDto
+import com.matsuura.facediary.v1.dto.UpdateVerifyTokenDto
 import com.matsuura.facediary.v1.mappers.auth.AuthMapper
 import com.matsuura.facediary.v1.models.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,7 +31,7 @@ class AuthServiceImpl: AuthService {
         }
 
         if (!user.isVerified) {
-            throw Http400Exception(
+            throw Http401Exception(
                 message = ErrorMessage.MAIL_NOT_VERIFIED,
             )
         }
@@ -47,31 +48,56 @@ class AuthServiceImpl: AuthService {
     override fun createUser(email: String, password: String, verifyToken: String) {
 
         val user: User? = authMapper.findUserByEmail(email = email)
-        if (user != null) {
+        if (user != null && user.isVerified) {
             throw Http400Exception(
                 message = ErrorMessage.USER_ALREADY_EXISTED
             )
         }
 
-        val dto: InsertUserDto = InsertUserDto(
-            email = email,
-            password = password,
-            verifyToken = verifyToken,
-        )
+        if (user == null) {
 
-        val insertCount = try {
-            authMapper.insertUser(dto = dto)
-        } catch (e: DuplicateKeyException) {
-            throw Http500Exception(
-                message = ErrorMessage.DUPLICATE_KEY,
+            val dto: InsertUserDto = InsertUserDto(
+                email = email,
+                password = password,
+                verifyToken = verifyToken,
             )
+
+            val insertCount = try {
+                authMapper.insertUser(dto = dto)
+            } catch (e: DuplicateKeyException) {
+                throw Http500Exception(
+                    message = ErrorMessage.DUPLICATE_KEY,
+                )
+            }
+
+            if (insertCount != 1) {
+                throw Http500Exception(
+                    message = ErrorMessage.DB_ERROR
+                )
+            }
+
+        } else {
+
+            val dto: UpdateVerifyTokenDto = UpdateVerifyTokenDto(
+                email = email,
+                verifyToken = verifyToken,
+            )
+
+            val updateCount = try {
+                authMapper.updateVerifyToken(dto = dto)
+            } catch (e: DuplicateKeyException) {
+                throw Http500Exception(
+                    message = ErrorMessage.DUPLICATE_KEY,
+                )
+            }
+
+            if (updateCount != 1) {
+                throw Http500Exception(
+                    message = ErrorMessage.DB_ERROR
+                )
+            }
         }
 
-        if (insertCount != 1) {
-            throw Http500Exception(
-                message = ErrorMessage.DB_ERROR
-            )
-        }
     }
 
     @Transactional
@@ -80,8 +106,8 @@ class AuthServiceImpl: AuthService {
         val user: User? = authMapper.findUserByVerifyToken(verifyToken = verifyToken)
 
         if (user == null) {
-            throw Http404Exception(
-                message = ErrorMessage.NOT_USER_EXIST
+            throw Http401Exception(
+                message = ErrorMessage.VERIFY_TOKEN_ERROR
             )
         }
 
@@ -101,7 +127,7 @@ class AuthServiceImpl: AuthService {
 
         val user: User? = authMapper.findUserByEmail(email = email)
 
-        if (user == null) {
+        if (user == null || !user.isVerified) {
             throw Http404Exception(
                 message = ErrorMessage.NOT_USER_EXIST
             )
@@ -110,6 +136,42 @@ class AuthServiceImpl: AuthService {
         val updateCount: Int = authMapper.updateResetPasswordToken(
             email = email,
             passwordToken = passwordToken,
+        )
+
+        if (updateCount != 1) {
+            throw Http500Exception(
+                message = ErrorMessage.DB_ERROR,
+            )
+        }
+
+    }
+
+    @Transactional
+    override fun changePassword(email: String, oldPassword: String, newPassword: String, passwordToken: String) {
+
+        val user: User? = authMapper.findUserByEmail(email = email)
+
+        if (user == null) {
+            throw Http404Exception(
+                message = ErrorMessage.NOT_USER_EXIST,
+            )
+        }
+
+        if (user.resetPasswordToken != passwordToken) {
+            throw Http401Exception(
+                message = ErrorMessage.RESET_PASSWORD_TOKEN_MISTAKE,
+            )
+        }
+
+        if (user.password != oldPassword) {
+            throw Http401Exception(
+                message = ErrorMessage.PASSWORD_ERROR,
+            )
+        }
+
+        val updateCount: Int = authMapper.updatePassword(
+            email = email,
+            password = newPassword,
         )
 
         if (updateCount != 1) {
