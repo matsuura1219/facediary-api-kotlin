@@ -4,7 +4,7 @@ import com.matsuura.facediary.exception.Http400Exception
 import com.matsuura.facediary.exception.Http401Exception
 import com.matsuura.facediary.exception.Http404Exception
 import com.matsuura.facediary.exception.Http500Exception
-import com.matsuura.facediary.util.ErrorMessage
+import com.matsuura.facediary.util.MessageUtils
 import com.matsuura.facediary.v1.dto.InsertUserDto
 import com.matsuura.facediary.v1.dto.UpdateVerifyTokenDto
 import com.matsuura.facediary.v1.mappers.auth.AuthMapper
@@ -26,19 +26,19 @@ class AuthServiceImpl: AuthService {
 
         if (user == null) {
             throw Http404Exception(
-                message = ErrorMessage.NOT_USER_EXIST,
+                message = MessageUtils.NOT_USER_EXIST,
             )
         }
 
         if (!user.isVerified) {
             throw Http401Exception(
-                message = ErrorMessage.MAIL_NOT_VERIFIED,
+                message = MessageUtils.MAIL_NOT_VERIFIED,
             )
         }
 
         if (user.password != password) {
             throw Http401Exception(
-                message = ErrorMessage.PASSWORD_ERROR
+                message = MessageUtils.PASSWORD_ERROR
             )
         }
 
@@ -50,7 +50,7 @@ class AuthServiceImpl: AuthService {
         val user: User? = authMapper.findUserByEmail(email = email)
         if (user != null && user.isVerified) {
             throw Http400Exception(
-                message = ErrorMessage.USER_ALREADY_EXISTED
+                message = MessageUtils.USER_ALREADY_EXISTED
             )
         }
 
@@ -66,13 +66,13 @@ class AuthServiceImpl: AuthService {
                 authMapper.insertUser(dto = dto)
             } catch (e: DuplicateKeyException) {
                 throw Http500Exception(
-                    message = ErrorMessage.DUPLICATE_KEY,
+                    message = MessageUtils.DUPLICATE_KEY,
                 )
             }
 
             if (insertCount != 1) {
                 throw Http500Exception(
-                    message = ErrorMessage.DB_ERROR
+                    message = MessageUtils.DB_ERROR
                 )
             }
 
@@ -87,13 +87,13 @@ class AuthServiceImpl: AuthService {
                 authMapper.updateVerifyToken(dto = dto)
             } catch (e: DuplicateKeyException) {
                 throw Http500Exception(
-                    message = ErrorMessage.DUPLICATE_KEY,
+                    message = MessageUtils.DUPLICATE_KEY,
                 )
             }
 
             if (updateCount != 1) {
                 throw Http500Exception(
-                    message = ErrorMessage.DB_ERROR
+                    message = MessageUtils.DB_ERROR
                 )
             }
         }
@@ -107,14 +107,14 @@ class AuthServiceImpl: AuthService {
 
         if (user == null) {
             throw Http401Exception(
-                message = ErrorMessage.VERIFY_TOKEN_ERROR
+                message = MessageUtils.VERIFY_TOKEN_ERROR
             )
         }
 
         val updateCount: Int = authMapper.updateVerifyFlag(verifyToken = verifyToken)
         if (updateCount != 1) {
             throw Http500Exception(
-                message = ErrorMessage.DB_ERROR,
+                message = MessageUtils.DB_ERROR,
             )
         }
 
@@ -129,7 +129,7 @@ class AuthServiceImpl: AuthService {
 
         if (user == null || !user.isVerified) {
             throw Http404Exception(
-                message = ErrorMessage.NOT_USER_EXIST
+                message = MessageUtils.NOT_USER_EXIST
             )
         }
 
@@ -140,7 +140,7 @@ class AuthServiceImpl: AuthService {
 
         if (updateCount != 1) {
             throw Http500Exception(
-                message = ErrorMessage.DB_ERROR,
+                message = MessageUtils.DB_ERROR,
             )
         }
 
@@ -153,19 +153,19 @@ class AuthServiceImpl: AuthService {
 
         if (user == null) {
             throw Http404Exception(
-                message = ErrorMessage.NOT_USER_EXIST,
+                message = MessageUtils.NOT_USER_EXIST,
             )
         }
 
         if (user.resetPasswordToken != passwordToken) {
             throw Http401Exception(
-                message = ErrorMessage.RESET_PASSWORD_TOKEN_MISTAKE,
+                message = MessageUtils.RESET_PASSWORD_TOKEN_MISTAKE,
             )
         }
 
         if (user.password != oldPassword) {
             throw Http401Exception(
-                message = ErrorMessage.PASSWORD_ERROR,
+                message = MessageUtils.PASSWORD_ERROR,
             )
         }
 
@@ -176,7 +176,7 @@ class AuthServiceImpl: AuthService {
 
         if (updateCount != 1) {
             throw Http500Exception(
-                message = ErrorMessage.DB_ERROR,
+                message = MessageUtils.DB_ERROR,
             )
         }
 

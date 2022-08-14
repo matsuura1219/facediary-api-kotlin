@@ -4,9 +4,9 @@ import com.matsuura.facediary.exception.Http400Exception
 import com.matsuura.facediary.extension.isEmailValidate
 import com.matsuura.facediary.extension.isPasswordValidate
 import com.matsuura.facediary.util.Constants
-import com.matsuura.facediary.util.ErrorMessage
+import com.matsuura.facediary.util.MessageUtils
 import com.matsuura.facediary.util.JwtTokenUtils
-import com.matsuura.facediary.util.Utils
+import com.matsuura.facediary.util.CommonUtils
 import com.matsuura.facediary.v1.models.User
 import com.matsuura.facediary.v1.models.requests.ChangePasswordRequest
 import com.matsuura.facediary.v1.models.requests.CreateUserRequest
@@ -36,7 +36,7 @@ class AuthController {
         // validation check
         if (!email.isEmailValidate() || !password.isPasswordValidate()) {
             throw Http400Exception(
-                message = ErrorMessage.VALIDATION_ERROR,
+                message = MessageUtils.VALIDATION_ERROR,
             )
         }
 
@@ -49,7 +49,7 @@ class AuthController {
         val accessToken: String = JwtTokenUtils.generateJwtToken(email = email)
 
         return mapOf(
-            "message" to ErrorMessage.SUCCESS,
+            "message" to MessageUtils.SUCCESS,
             "errorCode" to "",
             "accessToken" to accessToken,
         )
@@ -64,7 +64,7 @@ class AuthController {
 
         val email: String = request.email
         val password: String = request.password
-        val verifyToken: String = Utils.generateUniqueToken(
+        val verifyToken: String = CommonUtils.generateUniqueToken(
             email = email,
             password = password,
         )
@@ -87,7 +87,7 @@ class AuthController {
         )
 
         return mapOf(
-            "message" to ErrorMessage.SUCCESS,
+            "message" to MessageUtils.SUCCESS,
             "errorCode" to "",
         )
 
@@ -107,7 +107,7 @@ class AuthController {
         val accessToken: String = JwtTokenUtils.generateJwtToken(email = user.email)
 
         return mapOf(
-            "message" to ErrorMessage.SUCCESS,
+            "message" to MessageUtils.SUCCESS,
             "errorCode" to "",
             "accessToken" to accessToken,
         )
@@ -118,7 +118,7 @@ class AuthController {
         @RequestParam("email") email: String,
     ): Map<String, Any> {
 
-        val passwordToken: String = Utils.generateUniqueToken(
+        val passwordToken: String = CommonUtils.generateUniqueToken(
             email = email,
         )
 
@@ -136,7 +136,7 @@ class AuthController {
         )
 
         return mapOf(
-            "message" to ErrorMessage.SUCCESS,
+            "message" to MessageUtils.SUCCESS,
             "errorCode" to "",
         )
     }
@@ -154,13 +154,13 @@ class AuthController {
         // validation check
         if (!email.isEmailValidate() || !oldPassword.isPasswordValidate() || !newPassword.isPasswordValidate()) {
             throw Http400Exception(
-                message = ErrorMessage.VALIDATION_ERROR,
+                message = MessageUtils.VALIDATION_ERROR,
             )
         }
 
         if (oldPassword == newPassword) {
             throw Http400Exception(
-                message = ErrorMessage.VALIDATION_ERROR,
+                message = MessageUtils.VALIDATION_ERROR,
             )
         }
 
@@ -172,7 +172,7 @@ class AuthController {
         )
 
         return mapOf(
-            "message" to ErrorMessage.SUCCESS,
+            "message" to MessageUtils.SUCCESS,
             "errorCode" to "",
         )
     }

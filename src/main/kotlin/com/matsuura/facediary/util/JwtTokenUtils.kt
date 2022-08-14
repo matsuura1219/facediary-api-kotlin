@@ -46,7 +46,7 @@ object JwtTokenUtils {
             verifier.verify(token)
         } catch (e: JWTVerificationException) {
             throw Http401Exception(
-                message = ErrorMessage.TOKEN_EXPIRED,
+                message = MessageUtils.TOKEN_EXPIRED,
             )
         }
 

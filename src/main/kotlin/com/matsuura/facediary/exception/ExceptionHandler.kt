@@ -1,6 +1,6 @@
 package com.matsuura.facediary.exception
 
-import com.matsuura.facediary.util.ErrorMessage
+import com.matsuura.facediary.util.MessageUtils
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -17,7 +17,7 @@ class ExceptionHandler {
         e.printStackTrace()
 
         val message: String = e.message ?: throw Exception("error message is blank!!")
-        val errorCode: String = ErrorMessage.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
+        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
 
         return mapOf (
             "message" to message,
@@ -32,7 +32,7 @@ class ExceptionHandler {
         e.printStackTrace()
 
         val message: String = e.message ?: throw Exception("error message is blank!!")
-        val errorCode: String = ErrorMessage.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
+        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
 
         return mapOf (
             "message" to message,
@@ -47,7 +47,7 @@ class ExceptionHandler {
         e.printStackTrace()
 
         val message: String = e.message ?: throw Exception("error message is blank!!")
-        val errorCode: String = ErrorMessage.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
+        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
 
         return mapOf (
             "message" to message,
@@ -62,7 +62,7 @@ class ExceptionHandler {
         e.printStackTrace()
 
         val message: String = e.message ?: throw Exception("error message is blank!!")
-        val errorCode: String = ErrorMessage.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
+        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
 
         return mapOf (
             "message" to message,
@@ -76,8 +76,8 @@ class ExceptionHandler {
 
         e.printStackTrace()
 
-        val message: String = ErrorMessage.DB_ERROR
-        val errorCode: String = ErrorMessage.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
+        val message: String = MessageUtils.DB_ERROR
+        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
 
         return mapOf (
             "message" to message,
@@ -91,8 +91,8 @@ class ExceptionHandler {
 
         e.printStackTrace()
 
-        val message: String = ErrorMessage.UNKNOWN_ERROR
-        val errorCode: String = ErrorMessage.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
+        val message: String = MessageUtils.UNKNOWN_ERROR
+        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
 
         return mapOf (
             "message" to message,

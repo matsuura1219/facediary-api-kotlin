@@ -1,6 +1,6 @@
 package com.matsuura.facediary.util
 
-object ErrorMessage {
+object MessageUtils {
 
     const val SUCCESS: String = "SUCCESS"
 
