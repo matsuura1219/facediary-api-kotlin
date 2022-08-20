@@ -8,7 +8,7 @@
         SELECT
             email, password, is_verified AS isVerified, verify_token, reset_password_token
         FROM
-            facediary_db.user
+            user
         WHERE
             email = #{email}
     </select>
@@ -17,21 +17,21 @@
         SELECT
             email, password, is_verified AS isVerified, verify_token, reset_password_token
         FROM
-            facediary_db.user
+            user
         WHERE
             verify_token = #{verifyToken}
     </select>
 
     <insert id="insertUser" parameterType="com.matsuura.facediary.v1.dto.InsertUserDto">
         INSERT INTO
-            facediary_db.user (email, password, verify_token)
+            user (email, password, verify_token)
         VALUE
             (#{email, jdbcType=VARCHAR}, #{password, jdbcType=VARCHAR}, #{verifyToken, jdbcType=VARCHAR})
     </insert>
 
     <update id="updateVerifyFlag">
         UPDATE
-            facediary_db.user
+            user
         SET
             is_verified = true,
             verify_token = null
@@ -41,7 +41,7 @@
 
     <update id="updateVerifyToken">
         UPDATE
-            facediary_db.user
+            user
         SET
             verify_token = #{verifyToken}
         WHERE
@@ -50,7 +50,7 @@
 
     <update id="updateResetPasswordToken">
         UPDATE
-            facediary_db.user
+            user
         SET
             reset_password_token = #{passwordToken}
         WHERE
@@ -59,7 +59,7 @@
 
     <update id="updatePassword">
         UPDATE
-            facediary_db.user
+            user
         SET
             password = #{password}
         WHERE
