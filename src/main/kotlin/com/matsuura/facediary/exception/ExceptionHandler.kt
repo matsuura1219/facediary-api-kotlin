@@ -1,99 +1,116 @@
 package com.matsuura.facediary.exception
 
-import com.matsuura.facediary.util.MessageUtils
+import com.matsuura.facediary.model.response.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import java.sql.SQLException
 
 @RestControllerAdvice
 class ExceptionHandler {
 
-    @ExceptionHandler(Http400Exception::class)
+    @ExceptionHandler(AlreadyRegisteredException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    fun http400Handler(e: Http400Exception): Map<String, Any> {
-
+    fun alreadyRegisterExceptionHandler(e: AlreadyRegisteredException): ErrorResponse {
         e.printStackTrace()
-
         val message: String = e.message ?: throw Exception("error message is blank!!")
-        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
-
-        return mapOf (
-            "message" to message,
-            "errorCode" to errorCode,
+        val errorCode: String = e.code
+        return ErrorResponse(
+            message = message,
+            errorCode = errorCode,
         )
     }
 
-    @ExceptionHandler(Http401Exception::class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    fun http401Handler(e: Http401Exception): Map<String, Any> {
-
+    @ExceptionHandler(DbErrorException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun dbErrorExceptionHandler(e: DbErrorException): ErrorResponse {
         e.printStackTrace()
-
         val message: String = e.message ?: throw Exception("error message is blank!!")
-        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
-
-        return mapOf (
-            "message" to message,
-            "errorCode" to errorCode,
+        val errorCode: String = e.code
+        return ErrorResponse(
+            message = message,
+            errorCode = errorCode,
         )
     }
 
-    @ExceptionHandler(Http404Exception::class)
+    @ExceptionHandler(DuplicateErrorException::class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    fun duplicateErrorExceptionHandler(e: DuplicateErrorException): ErrorResponse {
+        e.printStackTrace()
+        val message: String = e.message ?: throw Exception("error message is blank!!")
+        val errorCode: String = e.code
+        return ErrorResponse(
+            message = message,
+            errorCode = errorCode,
+        )
+    }
+
+    @ExceptionHandler(NotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun http404Handler(e: Http404Exception): Map<String, Any> {
-
+    fun notFoundException(e: NotFoundException): ErrorResponse {
         e.printStackTrace()
-
         val message: String = e.message ?: throw Exception("error message is blank!!")
-        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
-
-        return mapOf (
-            "message" to message,
-            "errorCode" to errorCode,
+        val errorCode: String = e.code
+        return ErrorResponse(
+            message = message,
+            errorCode = errorCode,
         )
     }
 
-    @ExceptionHandler(Http500Exception::class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun http500Handler(e: Http404Exception): Map<String, Any> {
-
+    @ExceptionHandler(UnAuthorisedException::class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    fun unAuthorisedException(e: UnAuthorisedException): ErrorResponse {
         e.printStackTrace()
-
         val message: String = e.message ?: throw Exception("error message is blank!!")
-        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
-
-        return mapOf (
-            "message" to message,
-            "errorCode" to errorCode,
+        val errorCode: String = e.code
+        return ErrorResponse(
+            message = message,
+            errorCode = errorCode,
         )
     }
 
-    @ExceptionHandler(SQLException::class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun sqlExceptionHandler(e: Exception): Map<String, Any> {
-
+    @ExceptionHandler(ValidationErrorException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun validationErrorException(e: ValidationErrorException): ErrorResponse {
         e.printStackTrace()
+        val message: String = e.message ?: throw Exception("error message is blank!!")
+        val errorCode: String = e.code
+        return ErrorResponse(
+            message = message,
+            errorCode = errorCode,
+        )
+    }
 
-        val message: String = MessageUtils.DB_ERROR
-        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
+    @ExceptionHandler(VerifyTokenErrorException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun verifyTokenErrorException(e: VerifyTokenErrorException): ErrorResponse {
+        e.printStackTrace()
+        val message: String = e.message ?: throw Exception("error message is blank!!")
+        val errorCode: String = e.code
+        return ErrorResponse(
+            message = message,
+            errorCode = errorCode,
+        )
+    }
 
-        return mapOf (
-            "message" to message,
-            "errorCode" to errorCode,
+    @ExceptionHandler(WrongPasswordException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    fun wrongPasswordException(e: WrongPasswordException): ErrorResponse {
+        e.printStackTrace()
+        val message: String = e.message ?: throw Exception("error message is blank!!")
+        val errorCode: String = e.code
+        return ErrorResponse(
+            message = message,
+            errorCode = errorCode,
         )
     }
 
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun otherExceptionHandler(e: Exception): Map<String, Any> {
-
+    fun unexpectedExceptionHandler(e: Exception): Map<String, Any> {
         e.printStackTrace()
-
-        val message: String = MessageUtils.UNKNOWN_ERROR
-        val errorCode: String = MessageUtils.CODE_LIST[message] ?: throw Exception("error code is not defined!!")
-
+        val message: String = "Unexpected error occurs"
+        val errorCode: String = "ES99_099"
         return mapOf (
             "message" to message,
             "errorCode" to errorCode,
