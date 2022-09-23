@@ -13,9 +13,11 @@ import java.io.ByteArrayInputStream
 import java.util.*
 import javax.annotation.Resource
 
-
+/*
 @Service
 class S3ServiceImpl : S3Service {
+
+
 
     @Resource
     private lateinit var s3Client: AmazonS3
@@ -37,4 +39,6 @@ class S3ServiceImpl : S3Service {
 
         return fileName
     }
+
 }
+*/

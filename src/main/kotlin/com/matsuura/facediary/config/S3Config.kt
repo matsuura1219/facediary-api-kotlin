@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-
+/*
 @Configuration
 class S3Config {
 
@@ -30,3 +30,4 @@ class S3Config {
             .withRegion(s3ClientRegion).build()
     }
 }
+*/
