@@ -14,8 +14,7 @@ spring:
       mail:
         smtp:
           auth: true
-          starttls:
-            enable: true
+          starttls.enable: true
 
 # S3
 cloud:
