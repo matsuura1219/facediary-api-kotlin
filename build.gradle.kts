@@ -29,6 +29,9 @@ dependencies {
 	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0")
 	// mail
 	implementation("org.springframework.boot:spring-boot-starter-mail")
+
+	implementation(platform("com.amazonaws:aws-java-sdk-bom:1.11.1000"))
+	implementation("com.amazonaws:aws-java-sdk-s3")
 }
 
 tasks.withType<KotlinCompile> {

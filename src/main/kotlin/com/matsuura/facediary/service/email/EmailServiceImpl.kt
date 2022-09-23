@@ -1,17 +1,11 @@
-package com.matsuura.facediary.service.auth
+package com.matsuura.facediary.service.email
 
-import com.matsuura.facediary.exception.*
-import com.matsuura.facediary.model.User
-import com.matsuura.facediary.model.dto.InsertUserDto
-import com.matsuura.facediary.model.dto.UpdateVerifyTokenDto
-import com.matsuura.facediary.repository.auth.AuthMapper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DuplicateKeyException
 import org.springframework.mail.MailException
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+
 @Service
 class EmailServiceImpl: EmailService {
 

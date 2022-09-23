@@ -7,7 +7,7 @@ import com.matsuura.facediary.model.User
 import com.matsuura.facediary.model.request.ChangePasswordRequest
 import com.matsuura.facediary.model.request.CreateUserRequest
 import com.matsuura.facediary.service.auth.AuthService
-import com.matsuura.facediary.service.auth.EmailService
+import com.matsuura.facediary.service.email.EmailService
 import com.matsuura.facediary.util.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*

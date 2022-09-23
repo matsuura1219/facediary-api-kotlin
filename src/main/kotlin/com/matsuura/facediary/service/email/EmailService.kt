@@ -1,4 +1,4 @@
-package com.matsuura.facediary.service.auth
+package com.matsuura.facediary.service.email
 
 interface EmailService {
 
