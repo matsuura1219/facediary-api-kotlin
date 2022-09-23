@@ -3,7 +3,7 @@ package com.matsuura.facediary.util
 import java.security.MessageDigest
 import java.time.LocalDateTime
 
-object CommonUtils {
+object CommonUtil {
 
     fun generateUniqueToken(email: String, password: String = ""): String {
         val currentDateStr: String = LocalDateTime.now().toString()

@@ -7,6 +7,7 @@ import com.matsuura.facediary.model.User
 import com.matsuura.facediary.model.request.ChangePasswordRequest
 import com.matsuura.facediary.model.request.CreateUserRequest
 import com.matsuura.facediary.service.auth.AuthService
+import com.matsuura.facediary.service.auth.EmailService
 import com.matsuura.facediary.util.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -20,6 +21,9 @@ class AuthController {
 
     @Autowired
     private lateinit var authService: AuthService
+
+    @Autowired
+    private lateinit var emailService: EmailService
 
     /** ログイン可否を判定します */
     @GetMapping("/login")
@@ -73,7 +77,7 @@ class AuthController {
             )
         }
 
-        val verifyToken: String = CommonUtils.generateUniqueToken(
+        val verifyToken: String = CommonUtil.generateUniqueToken(
             email = email,
             password = password,
         )
@@ -85,6 +89,15 @@ class AuthController {
         )
 
         // TODO: SNSでメール送信したい
+        val url: String = String.format(Constant.REGISTER_MAIL_URL, verifyToken)
+
+        // send email
+        emailService.sendEmail(
+            from = Constant.MAIL_ACCOUNT,
+            to = email,
+            title = Constant.REGISTER_MAIL_TITLE,
+            message = String.format(Constant.REGISTER_MAIL_MESSAGE, url),
+        )
 
         return SuccessResponse(message = "OK")
 
@@ -117,13 +130,20 @@ class AuthController {
             )
         }
 
-        val passwordToken: String = CommonUtils.generateUniqueToken(
+        val passwordToken: String = CommonUtil.generateUniqueToken(
             email = email,
         )
 
         authService.resetPassword(email = email, passwordToken = passwordToken)
 
-        // TODO: SNSで送信したい
+        // TODO: SESで送信してみたい
+        val url: String = String.format(Constant.RESET_PASSWORD_MAIL_URL, passwordToken)
+        emailService.sendEmail(
+            from = Constant.MAIL_ACCOUNT,
+            to = email,
+            title = Constant.RESET_PASSWORD_MAIL_TITLE,
+            message = String.format(Constant.RESET_PASSWORD_MAIL_MESSAGE, url),
+        )
 
         return SuccessResponse(message = "OK")
     }
