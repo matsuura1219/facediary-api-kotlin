@@ -32,14 +32,14 @@ class AuthController {
         @RequestParam("password") password: String,
     ): AuthResponse {
 
-        if (ValidationUtil.checkEmailValidate(email = email)) {
+        if (!ValidationUtil.checkEmailValidate(email = email)) {
             throw ValidationErrorException(
                 code = "ES01_001",
                 message = "Email is not validate",
             )
         }
 
-        if (ValidationUtil.checkPasswordValidate(password = password)) {
+        if (!ValidationUtil.checkPasswordValidate(password = password)) {
             throw ValidationErrorException(
                 code = "ES01_002",
                 message = "Password is not validate",
@@ -63,14 +63,14 @@ class AuthController {
         val email: String = request.email
         val password: String = request.password
 
-        if (ValidationUtil.checkEmailValidate(email = email)) {
+        if (!ValidationUtil.checkEmailValidate(email = email)) {
             throw ValidationErrorException(
                 code = "ES02_001",
                 message = "Email is not validate",
             )
         }
 
-        if (ValidationUtil.checkPasswordValidate(password = password)) {
+        if (!ValidationUtil.checkPasswordValidate(password = password)) {
             throw ValidationErrorException(
                 code = "ES02_002",
                 message = "Password is not validate",
@@ -123,7 +123,7 @@ class AuthController {
         @RequestParam("email") email: String,
     ): SuccessResponse {
 
-        if (ValidationUtil.checkEmailValidate(email = email)) {
+        if (!ValidationUtil.checkEmailValidate(email = email)) {
             throw ValidationErrorException(
                 code = "ES04_001",
                 message = "Email is not validate",
@@ -159,21 +159,21 @@ class AuthController {
         val newPassword: String = request.newPassword
         val passwordToken: String = request.passwordToken
 
-        if (ValidationUtil.checkEmailValidate(email = email)) {
+        if (!ValidationUtil.checkEmailValidate(email = email)) {
             throw ValidationErrorException(
                 code = "ES05_001",
                 message = "Email is not validate",
             )
         }
 
-        if (ValidationUtil.checkPasswordValidate(password = oldPassword)) {
+        if (!ValidationUtil.checkPasswordValidate(password = oldPassword)) {
             throw ValidationErrorException(
                 code = "ES05_002",
                 message = "Old password is not validate",
             )
         }
 
-        if (ValidationUtil.checkPasswordValidate(password = newPassword)) {
+        if (!ValidationUtil.checkPasswordValidate(password = newPassword)) {
             throw ValidationErrorException(
                 code = "ES05_003",
                 message = "New password is not validate",
