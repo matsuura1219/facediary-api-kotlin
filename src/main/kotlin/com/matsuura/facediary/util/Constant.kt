@@ -4,7 +4,7 @@ object Constant {
 
     const val MAIL_ACCOUNT: String = "facediary1234@gmail.com"
 
-    const val REGISTER_MAIL_URL: String = "https://facediaryapp/register?token=%s"
+    const val REGISTER_MAIL_URL: String = "https://facediaryapp.page.link/?link=https://facediaryapp.com/register?token=%s&apn=jp.matsuura.facediary"
 
     const val REGISTER_MAIL_TITLE: String = "【FaceDiary】登録手続きをお願いします"
     const val REGISTER_MAIL_MESSAGE: String =
