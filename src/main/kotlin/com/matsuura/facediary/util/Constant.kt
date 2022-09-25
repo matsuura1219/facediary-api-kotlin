@@ -12,7 +12,7 @@ object Constant {
                 "以下のリンクを押下し、アプリの登録を完了をしてください。\r\n" +
                 "%s"
 
-    const val RESET_PASSWORD_MAIL_URL: String = "https://facediaryapp/reset?token=%s"
+    const val RESET_PASSWORD_MAIL_URL: String = "https://facediaryapp.page.link/?link=https://facediaryapp.com/reset?token=%s&apn=jp.matsuura.facediary"
 
     const val RESET_PASSWORD_MAIL_TITLE: String = "【FaceDiary】パスワード変更の手続きをお願いします"
     const val RESET_PASSWORD_MAIL_MESSAGE: String =
