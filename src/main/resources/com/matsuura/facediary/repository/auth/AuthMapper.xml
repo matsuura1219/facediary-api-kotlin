@@ -36,14 +36,14 @@
             is_verified = true,
             verify_token = null
         WHERE
-            verify_token = #{verifyToken}
+            verify_token = #{token}
     </update>
 
     <update id="updateVerifyToken">
         UPDATE
             user
         SET
-            verify_token = #{verifyToken}
+            verify_token = #{token}
         WHERE
             email = #{email}
     </update>

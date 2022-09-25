@@ -101,15 +101,15 @@ class AuthServiceImpl: AuthService {
     }
 
     @Transactional
-    override fun verifyMailToken(verifyToken: String): User {
+    override fun verifyMailToken(token: String): User {
 
-        val user: User = authMapper.findUserByVerifyToken(verifyToken = verifyToken)
+        val user: User = authMapper.findUserByVerifyToken(token = token)
             ?: throw VerifyTokenErrorException(
                 code = "ES03_001",
                 message = "Mail token is not validate",
             )
 
-        val updateCount: Int = authMapper.updateVerifyFlag(verifyToken = verifyToken)
+        val updateCount: Int = authMapper.updateVerifyFlag(token = token)
         if (updateCount != 1) {
             throw DbErrorException(
                 code = "ES03_002" ,

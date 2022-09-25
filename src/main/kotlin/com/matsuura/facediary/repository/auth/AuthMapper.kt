@@ -10,13 +10,13 @@ interface AuthMapper {
 
     fun findUserByEmail(email: String): User?
 
-    fun findUserByVerifyToken(verifyToken: String): User?
+    fun findUserByVerifyToken(token: String): User?
 
     fun insertUser(dto: InsertUserDto): Int
 
     fun updateVerifyToken(dto: UpdateVerifyTokenDto): Int
 
-    fun updateVerifyFlag(verifyToken: String): Int
+    fun updateVerifyFlag(token: String): Int
 
     fun updateResetPasswordToken(email: String, passwordToken: String): Int
 

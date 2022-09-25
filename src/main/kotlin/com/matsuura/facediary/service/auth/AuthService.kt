@@ -8,7 +8,7 @@ interface AuthService {
 
     fun createUser(email: String, password: String, verifyToken: String)
 
-    fun verifyMailToken(verifyToken: String): User
+    fun verifyMailToken(token: String): User
 
     fun resetPassword(email: String, passwordToken: String)
 

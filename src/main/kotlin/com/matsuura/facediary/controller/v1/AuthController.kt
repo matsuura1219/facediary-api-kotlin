@@ -107,10 +107,10 @@ class AuthController {
     /** ユーザ登録用トークンのチェックを行います */
     @GetMapping("/verify_email_token")
     fun verifyEmailToken(
-        @RequestParam("verifyToken") verifyToken: String,
+        @RequestParam("token") token: String,
     ) : AuthResponse {
 
-        val user: User = authService.verifyMailToken(verifyToken = verifyToken)
+        val user: User = authService.verifyMailToken(token = token)
 
         val accessToken: String = JwtTokenUtil.generateJwtToken(email = user.email)
 
