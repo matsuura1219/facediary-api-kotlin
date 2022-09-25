@@ -41,7 +41,7 @@ class AuthServiceImpl: AuthService {
     }
 
     @Transactional
-    override fun createUser(email: String, password: String, verifyToken: String) {
+    override fun createUser(email: String, password: String, token: String) {
 
         val user: User? = authMapper.findUserByEmail(email = email)
         if (user != null && user.isVerified) {
@@ -55,7 +55,7 @@ class AuthServiceImpl: AuthService {
             val dto = InsertUserDto(
                 email = email,
                 password = password,
-                verifyToken = verifyToken,
+                token = token,
             )
 
             val insertCount = try {
@@ -78,7 +78,7 @@ class AuthServiceImpl: AuthService {
 
             val dto = UpdateVerifyTokenDto(
                 email = email,
-                verifyToken = verifyToken,
+                token = token,
             )
 
             val updateCount = try {
