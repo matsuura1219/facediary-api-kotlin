@@ -9,8 +9,10 @@ import com.matsuura.facediary.model.request.CreateUserRequest
 import com.matsuura.facediary.service.auth.AuthService
 import com.matsuura.facediary.service.email.EmailService
 import com.matsuura.facediary.util.*
+import org.apache.commons.codec.net.URLCodec
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.net.URLEncoder
 
 /**
  * 認証周りの処理を行うコントローラクラスです
@@ -89,7 +91,10 @@ class AuthController {
         )
 
         // TODO: SNSでメール送信したい
-        val url: String = String.format(Constant.REGISTER_MAIL_URL, verifyToken)
+        val deepLink: String = String.format(Constant.REGISTER_MAIL_DEEP_LINK, verifyToken)
+        val encodedLink: String = URLCodec("UTF-8").encode(deepLink)
+        val url: String = String.format(Constant.REGISTER_MAIL_URL, encodedLink
+        )
 
         // send email
         emailService.sendEmail(
@@ -137,7 +142,9 @@ class AuthController {
         authService.resetPassword(email = email, passwordToken = passwordToken)
 
         // TODO: SESで送信してみたい
-        val url: String = String.format(Constant.RESET_PASSWORD_MAIL_URL, passwordToken, email)
+        val deepLink: String = String.format(Constant.RESET_PASSWORD_DEEP_LINK, passwordToken, email)
+        val encodedLink: String = URLCodec("UTF-8").encode(deepLink)
+        val url: String = String.format(Constant.RESET_PASSWORD_MAIL_URL, encodedLink)
         emailService.sendEmail(
             from = Constant.MAIL_ACCOUNT,
             to = email,
