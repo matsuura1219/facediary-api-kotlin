@@ -148,7 +148,7 @@ class AuthServiceImpl: AuthService {
     }
 
     @Transactional
-    override fun changePassword(email: String, oldPassword: String, newPassword: String, passwordToken: String) {
+    override fun changePassword(email: String, password: String, token: String) {
 
         val user: User = authMapper.findUserByEmail(email = email)
             ?: throw NotFoundException(
@@ -156,23 +156,16 @@ class AuthServiceImpl: AuthService {
                 message = "The user does not exist",
             )
 
-        if (user.resetPasswordToken != passwordToken) {
+        if (user.resetPasswordToken != token) {
             throw VerifyTokenErrorException(
                 code = "ES05_006",
                 message = "Password token is not validate",
             )
         }
 
-        if (user.password != oldPassword) {
-            throw WrongPasswordException(
-                code = "ES05_007",
-                message = "Old password is wrong",
-            )
-        }
-
         val updateCount: Int = authMapper.updatePassword(
             email = email,
-            password = newPassword,
+            password = password,
         )
 
         if (updateCount != 1) {

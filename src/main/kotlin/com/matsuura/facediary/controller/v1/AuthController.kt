@@ -155,9 +155,8 @@ class AuthController {
     ): SuccessResponse {
 
         val email: String = request.email
-        val oldPassword: String = request.oldPassword
-        val newPassword: String = request.newPassword
-        val passwordToken: String = request.passwordToken
+        val password: String = request.password
+        val passwordToken: String = request.token
 
         if (!ValidationUtil.checkEmailValidate(email = email)) {
             throw ValidationErrorException(
@@ -166,32 +165,17 @@ class AuthController {
             )
         }
 
-        if (!ValidationUtil.checkPasswordValidate(password = oldPassword)) {
+        if (!ValidationUtil.checkPasswordValidate(password = password)) {
             throw ValidationErrorException(
                 code = "ES05_002",
-                message = "Old password is not validate",
-            )
-        }
-
-        if (!ValidationUtil.checkPasswordValidate(password = newPassword)) {
-            throw ValidationErrorException(
-                code = "ES05_003",
-                message = "New password is not validate",
-            )
-        }
-
-        if (oldPassword == newPassword) {
-            throw ValidationErrorException(
-                code = "ES05_004",
-                message = "New password is not validate",
+                message = "password is not validate",
             )
         }
 
         authService.changePassword(
             email = email,
-            oldPassword = oldPassword,
-            newPassword = newPassword,
-            passwordToken = passwordToken,
+            password = password,
+            token = passwordToken,
         )
 
         return SuccessResponse(message = "OK")
