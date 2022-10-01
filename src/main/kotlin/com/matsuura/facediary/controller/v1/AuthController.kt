@@ -137,7 +137,7 @@ class AuthController {
         authService.resetPassword(email = email, passwordToken = passwordToken)
 
         // TODO: SESで送信してみたい
-        val url: String = String.format(Constant.RESET_PASSWORD_MAIL_URL, passwordToken)
+        val url: String = String.format(Constant.RESET_PASSWORD_MAIL_URL, passwordToken, email)
         emailService.sendEmail(
             from = Constant.MAIL_ACCOUNT,
             to = email,
